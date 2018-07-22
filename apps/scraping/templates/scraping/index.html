@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Procesar noticias</title>
+</head>
+<body>
+	<h3>Pagina de noticias, webscraping</h3> 
+	<form action=" {% url 'app_noticias:p_procesar' %} " method="POST"  >{% csrf_token %}	 	
+	<label for="">ingrese la dominio de un sitio</label>
+	<label for="">Ejemplo :<b> https://elcomercio.pe/ </b></label>
+	<input type="text" class="text" name="dominio" required="">
+	<input type="submit" value="Enviar">
+	</form>
+
+	<h3>RESULTADOS DE URL</h3>
+	<textarea name="" id="" cols="100" rows="20">
+		{{urls}}
+	</textarea>
+
+</body>
+</html>
