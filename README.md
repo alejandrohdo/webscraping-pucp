@@ -8,3 +8,7 @@ Web scraping de sitios web con python3 y django
 ./manage.py runserver
 
 http://localhost:8000/
+
+presentacion:https://docs.google.com/presentation/d/1V7BJoiIeeH6IQH0lTEZTTrE6ryGJLKu_ohmQRbQphmg/edit?usp=sharing
+
+Segunda parte, aun no deefenido...!
