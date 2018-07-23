@@ -1,21 +1,32 @@
 # webscraping-pucp
-Web scraping de sitios web con python3 y django
-1ra parte: Analisis de Urls
+Web scraping de sitios web con python3 y django2
+1ra parte: Análisis de Urls
 
-git clone https://github.com/alejandrohdo/webscraping-pucp.git
+Nota: se le recomienda trabajar con un entorno virtual y se desea trabajar con 
+NLP
 
-cd webscraping-pucp
 
-pip install -r requirements.txt
+>> git clone https://github.com/alejandrohdo/webscraping-pucp.git
 
-./manage.py migrate
+>> cd webscraping-pucp
 
-./manage.py createsuperuser
+>> pip3 install -r requirements.txt
 
-./manage.py runserver
+>> ./manage.py migrate
+
+>> ./manage.py createsuperuser
+
+>> ./manage.py runserver
 
 http://localhost:8000/
 
-presentación:https://docs.google.com/presentation/d/1V7BJoiIeeH6IQH0lTEZTTrE6ryGJLKu_ohmQRbQphmg/edit?usp=sharing
+visualización de información: http://localhost:8000/admin/scraping/noticia/
 
-2da parte: aún no defenido...!
+Instalación de NLP en newspaper, para determinar las palabras claves
+>> python
+>> import nltk
+>> nltk.download('popular')
+
+Presentación:https://docs.google.com/presentation/d/1V7BJoiIeeH6IQH0lTEZTTrE6ryGJLKu_ohmQRbQphmg/edit?usp=sharing
+
+2da parte: aún no definido...!

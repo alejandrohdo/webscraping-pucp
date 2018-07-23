@@ -1,0 +1,32 @@
+
+#GitIgnore de todas las migraciones
+apps/scraping/migrations/*
+
+media/*
+#gitIgnore de Setting.py
+public/*
+webscraping/__pycache__/*
+
+# File types #
+##############
+*.pyo
+*.pyc
+*.swo
+*.swp
+*.swn
+
+# PyCharm project settings
+.idea
+
+# Directories #
+###############
+logs/
+
+# OS generated files #
+######################
+.DS_Store
+*.db
+Icon
+Thumbs.db
+*~HASLLAs
+,9   					

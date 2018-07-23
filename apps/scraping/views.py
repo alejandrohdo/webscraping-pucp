@@ -9,9 +9,9 @@ from .get_rotation_proxy import get_proxies
 import random
 import re
 from requests.exceptions import (ReadTimeout, ReadTimeout,
-                            Timeout, ConnectTimeout, ConnectionError, ProxyError)
+                                 Timeout, ConnectTimeout, ConnectionError, ProxyError)
 from newspaper import Article, Config
-from newspaper.article import ArticleException 
+from newspaper.article import ArticleException
 from .models import Noticia
 proxys = get_proxies()
 proxy = proxys[random.randrange(0, len(proxys))]
@@ -39,13 +39,13 @@ def correctorUrl(urlSite, urlChildren):
         valor = (urlResult.rsplit('/', 1)[1])
         valor1 = valor.split('.')
         if any(c in valor1 for c in ("png", "pdf", "jpg",
-            "jpeg", "gif", 'ico',
-            'psd', 'doc', 'docx',
-            'xls', 'exe', 'bmp', 'mov', 'avi'
-            'otf', 'ttf', 'zap', 'zip', 'mp3',
-            'wav', 'mp4', 'movie', 'mpg', 'iso'
-            'rar', 'cdr', 'txt', 'ppt', 'pptx',
-            'csv', 'css', 'json', 'java', 'swf')):
+                                     "jpeg", "gif", 'ico',
+                                     'psd', 'doc', 'docx',
+                                     'xls', 'exe', 'bmp', 'mov', 'avi'
+                                     'otf', 'ttf', 'zap', 'zip', 'mp3',
+                                     'wav', 'mp4', 'movie', 'mpg', 'iso'
+                                     'rar', 'cdr', 'txt', 'ppt', 'pptx',
+                                     'csv', 'css', 'json', 'java', 'swf')):
             return False
     # si en caso se encuentra un pdf tipo:
     # https://www.telefonica.com.pe/documents/2015.pdf/69f20
@@ -88,12 +88,12 @@ def retry_request(url):
     try:
         # con allow_redirects=False, evitamos redireccionamiento como: A -->B--><--C
         r = requests.get(url,
-                headers={'User-Agent': agente_usuario},
-                proxies=proxies,
-                timeout=10,
-                allow_redirects=False,
-                verify=False
-                )
+                         headers={'User-Agent': agente_usuario},
+                         proxies=proxies,
+                         timeout=12,
+                         allow_redirects=False,
+                         verify=False
+                         )
         # por Ahora la respuesta en un PDF lo obiamos
         if r.headers.get('Content-Type') == 'application/pdf':
             r = None
@@ -121,21 +121,21 @@ def getUrls(url, save=False):
         agente_usuario = random.choice(get_user_agents())
         count_request = 0
     proxies = {
-                "http": 'http://' + proxy
-            }
+        "http": 'http://' + proxy
+    }
     try:
         r = requests.get(url,
-		        	headers={'User-Agent': agente_usuario},
-		        	proxies=proxies,
-		        	timeout=10,
-		        	allow_redirects=False,
-                    verify=False)
+                         headers={'User-Agent': agente_usuario},
+                         proxies=proxies,
+                         timeout=12,
+                         allow_redirects=False,
+                         verify=False)
         # si por por ABO la url es un pdf, lo obiamos
         if r.headers.get('Content-Type') == 'application/pdf':
             r = None
         count_request += 1
     except (ReadTimeout, Timeout, ConnectTimeout,
-        ConnectionError, ProxyError) as e:
+            ConnectionError, ProxyError) as e:
         print("Cambiando de proxy---------------->:", str(e))
         retry_value = retry_request(url)
         while retry_value['estado']:
@@ -173,6 +173,8 @@ def getUrls(url, save=False):
     return arrayOnlyUrlHost
 
 # configuracion para hacer peticiones personalizadas
+
+
 def config_newspaper():
     ''''
     proxy : random
@@ -183,84 +185,104 @@ def config_newspaper():
     config = Config()
     config.browser_user_agent = random.choice(get_user_agents())
     proxys = get_proxies()
-    if len(proxys)<= 0:
+    if len(proxys) <= 0:
         proxy = proxys[random.randrange(0, len(proxys) + 1)]
     else:
         proxy = proxys[random.randrange(0, len(proxys))]
     proxies = {"http": 'http://' + proxy}
-    config.proxies  = proxies 
+    config.proxies = proxies
     config.language = 'es'
     return config
 
 
 def save_url(urls):
-	estado = False
-	for url in urls:
-		print('DESCARGANDO URL:', url)
-		result_article = Noticia()
-		new_config  = config_newspaper()
-		result_article = [	]
-		try:
-			article = Article(url=url, config=new_config)
-			article.download()
-			article.parse()
-			article.nlp()
-			if article.text:
-				requests_attempts = 0
-			else:
-				article = None
-		except Exception as e:
-			print("ERROR, POSIBLEMENTE LA PAGINA NO SE PUEDE ACCEDER:", e)
-			print("CAMBIANDO DE PROXY Y AGENTE DE USUARIO----->:",
-				requests_attempts, " Intentos")
-			retry_value = retry_request(url)
-			while retry_value['estado']:
-				retry_value = retry_request(url)
-				if retry_value['estado'] and requests_attempts <= 2:
-					retry_value = retry_request(url)
-				else:
-					requests_attempts = 0
-					break
-			article = retry_value.get('article', None)
+    estado = False
+    global requests_attempts
+    new_config = config_newspaper()
+    for url in urls:
+        print('DESCARGANDO URL:', url)
+        # Insertart Article
+        p, created = Noticia.objects.get_or_create(url = url)
+        try:
+            if created:
+               article = Article(url=url, config=new_config)
+               article.download()
+               article.parse()
+               article.nlp()
+               if article.text:
+                    requests_attempts = 0
+               else:
+                    article = None
+               if article:
+               # get_or_create() a Article with similar first url.
+                    if article.publish_date:
+                        fecha_publicacion = (article.publish_date).strftime(
+                                '%Y-%m-%dT%H:%M:%SZ')
+                    else:
+                        fecha_publicacion = None
+                    p.titulo = article.title
+                    p.resumen = article.summary
+                    p.autor = article.authors
+                    p.fecha_publicacion = fecha_publicacion
+                    p.contenido = article.text
+                    p.palabras_clave = article.keywords
+                    p.imagen_destacada = article.top_image
+                    p.video = article.movies
+                    p.save()
+                    print ('Se ha guardado la Url:', article.url)
 
-		if article:
-			result_article.titulo = article.title
-			result_article.resumen = article.summary
-			result_article.autor = article.authors
-			if article.publish_date:
-				result_article.fecha_publicacion = (article.publish_date).strftime(
-                    '%Y-%m-%dT%H:%M:%SZ')
-			else:
-				result_article.fecha_publicacion = None
-
-			result_article.contenido = article.text
-			result_article.palabras_clave = None
-			result_article.imagen_destacada = article.top_image
-			result_article.video = article.movies
-			result_article.save()
-			result_article = {}
-			estado = True
-	return estado
+            else:
+               print ('Ya exite la Url:', url)
+        except Exception as e:
+            print("ERROR, POSIBLEMENTE LA PAGINA NO SE PUEDE ACCEDER:", e)
+            print("CAMBIANDO DE PROXY Y AGENTE DE USUARIO----->:",
+                  requests_attempts, " Intentos")
+            retry_value = retry_request(url)
+            while retry_value['estado']:
+                retry_value = retry_request(url)
+                if retry_value['estado'] and requests_attempts <= 2:
+                    retry_value = retry_request(url)
+                else:
+                    requests_attempts = 0
+                    break
+            article = retry_value.get('article', None)
+            if article:
+                # get_or_create() a Article with similar first url.
+                if article.publish_date:
+                    fecha_publicacion = (article.publish_date).strftime(
+                            '%Y-%m-%dT%H:%M:%SZ')
+                else:
+                    fecha_publicacion = None
+                p.titulo = article.title
+                p.resumen = article.summary
+                p.autor = article.authors
+                p.fecha_publicacion = fecha_publicacion
+                p.contenido = article.text
+                p.palabras_clave = article.keywords
+                p.imagen_destacada = article.top_image
+                p.video = article.movies
+                p.save()
+                print ('Se ha guardado la Url, en reintento:', article.url)
+        estado = True
+    return estado
 
 # Create your views here.
+
+
 class Index(TemplateView):
-	template_name = 'scraping/index.html'
-		
+    template_name = 'scraping/index.html'
+
+
 def procesar_url(request):
-	if request.method == 'POST':
-		result_url = getUrls(request.POST['dominio'])
-		print ('URLS ENCONTRADOS', result_url)
-		print ('CANTIDAD DE URL ENCONTRADOS-->', len(result_url))
-		# print ('INSERTANDO URLS A LA BASE DE DATOS')
-		# estatus_save =save_url(result_url)
-		# if estatus_save:
-		# 	print ('Ha terminado de Instar todo con exito..!')
-		# else:
-		# 	print ('Es posible que se haya generado error al guardar urls')
+    if request.method == 'POST':
+        result_url = getUrls(request.POST['dominio'])
+        print('URLS ENCONTRADOS', result_url)
+        print('CANTIDAD DE URL ENCONTRADOS-->', len(result_url))
+        print('INSERTANDO URLS A LA BASE DE DATOS')
+        estatus_save = save_url(result_url)
+        if estatus_save:
+            print('Ha terminado de Instar todo con exito..!')
+        else:
+            print('Es posible que se haya generado error al guardar urls')
 
-		return render(request, 'scraping/index.html', {'urls':result_url})
-
-
-
-		
-
+        return render(request, 'scraping/index.html', {'urls': result_url})
