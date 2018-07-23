@@ -2,6 +2,7 @@
 Web scraping de sitios web con python3 y django2
 
 1ra parte: Análisis de Urls, Ok
+
 2da parte: Descarga de datos, Ok
 
 Nota: se le recomienda trabajar con un entorno virtual y se desea trabajar con 
@@ -25,6 +26,7 @@ http://localhost:8000/
 visualización de información: http://localhost:8000/admin/scraping/noticia/
 
 Instalación de NLP en newspaper, para determinar las palabras claves
+
 >> python
 
 >> import nltk
