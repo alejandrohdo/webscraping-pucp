@@ -5,8 +5,7 @@ Web scraping de sitios web con python3 y django2
 
 2da parte: Descarga de datos, Ok
 
-Nota: se le recomienda trabajar con un entorno virtual y se desea trabajar con 
-NLP
+Nota: Se le recomienda trabajar con un entorno virtual, una vez activado ejecutar los siguientes procedimientos
 
 
 >> git clone https://github.com/alejandrohdo/webscraping-pucp.git
@@ -25,7 +24,7 @@ http://localhost:8000/
 
 visualización de información: http://localhost:8000/admin/scraping/noticia/
 
-Instalación de NLP en newspaper, para determinar las palabras claves
+Instalación de NLP en newspaper, para determinar las palabras claves, en el terminal ejecutar:
 
 >> python
 
