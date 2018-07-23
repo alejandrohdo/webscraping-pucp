@@ -18,4 +18,4 @@ http://localhost:8000/
 
 presentación:https://docs.google.com/presentation/d/1V7BJoiIeeH6IQH0lTEZTTrE6ryGJLKu_ohmQRbQphmg/edit?usp=sharing
 
-Segunda 2da parte: aún no defenido...!
+2da parte: aún no defenido...!
