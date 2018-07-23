@@ -1,6 +1,6 @@
 # webscraping-pucp
 Web scraping de sitios web con python3 y django
-Parte 1ra parte: Analisis de Urls
+1ra parte: Analisis de Urls
 
 git clone https://github.com/alejandrohdo/webscraping-pucp.git
 
