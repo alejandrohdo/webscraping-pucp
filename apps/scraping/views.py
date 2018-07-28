@@ -13,6 +13,7 @@ from requests.exceptions import (ReadTimeout, ReadTimeout,
 from newspaper import Article, Config
 from newspaper.article import ArticleException
 from .models import Noticia
+
 proxys = get_proxies()
 proxy = proxys[random.randrange(0, len(proxys))]
 agente_usuario = random.choice(get_user_agents())
@@ -223,7 +224,7 @@ def save_url(urls):
                     p.titulo = article.title
                     p.resumen = article.summary
                     p.autor = article.authors
-                    p.fecha_publicacion = fecha_publicacion
+                    p.fecha_publicacion = article.publish_date
                     p.contenido = article.text
                     p.palabras_clave = article.keywords
                     p.imagen_destacada = article.top_image
@@ -285,4 +286,6 @@ def procesar_url(request):
         else:
             print('Es posible que se haya generado error al guardar urls')
 
-        return render(request, 'scraping/index.html', {'urls': result_url})
+        return render(request, 'scraping/index.html', {'urls': result_url })
+    else:
+        return render(request, 'scraping/index.html')
