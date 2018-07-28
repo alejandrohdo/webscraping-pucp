@@ -34,4 +34,4 @@ Instalación de NLP en newspaper, para determinar las palabras claves, en el ter
 
 Presentación:https://docs.google.com/presentation/d/1V7BJoiIeeH6IQH0lTEZTTrE6ryGJLKu_ohmQRbQphmg/edit?usp=sharing
 
-Próximo taller: aún no definido...!
+Próximo taller: Integracion con celery!
